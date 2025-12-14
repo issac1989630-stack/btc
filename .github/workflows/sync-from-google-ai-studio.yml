@@ -1,0 +1,58 @@
+name: Sync from Google AI Studio
+
+on:
+  schedule:
+    # 每 30 分鐘自動檢查更新
+    - cron: '*/30 * * * *'
+  workflow_dispatch:  # 允許手動觸發
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download latest from Google Drive
+        env:
+          DRIVE_FILE_ID: ${{ secrets.DRIVE_FILE_ID }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        run: |
+          # 從 Google Drive 下載最新的 index.html
+          curl -L "https://www.googleapis.com/drive/v3/files/${DRIVE_FILE_ID}/export?mimeType=text/html" \
+            -H "Authorization: Bearer ${GOOGLE_API_KEY}" \
+            -o index.html.new
+          
+          # 檢查文件是否成功下載
+          if [ -s index.html.new ]; then
+            mv index.html.new index.html
+            echo "File downloaded successfully"
+          else
+            echo "Failed to download file"
+            exit 1
+          fi
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git diff --quiet index.html || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push if changed
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git add index.html
+          git commit -m "Auto-sync from Google AI Studio [$(date +'%Y-%m-%d %H:%M:%S')]"
+          git push
+
+      - name: Notify completion
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          echo "✅ Successfully synced from Google AI Studio"
+          echo "Changes detected and deployed automatically"
