@@ -29,4 +29,5 @@ jobs:
         env:
           # 重要: 將 GitHub Secret 注入到程式執行時的環境變數
           EMAIL_USER_EMAIL: ${{ secrets.EMAIL_USER_EMAIL }}
+                  EMAIL_PRIVATE_KEY: ${{ secrets.EMAIL_PRIVATE_KEY }}
         run: node cron-job.js
