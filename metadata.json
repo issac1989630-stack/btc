@@ -1,0 +1,5 @@
+{
+  "name": "比特幣週期監控系統",
+  "description": "一款專業的量化分析工具，基於加權鏈上數據和技術指標計算比特幣市場週期的頂部和底部。",
+  "requestFramePermissions": []
+}
