@@ -13,6 +13,7 @@ const CONFIG = {
   SERVICE_ID: 'service_hsnlldd',
   TEMPLATE_ID: 'template_67w5f0a',
   PUBLIC_KEY: 'C8dqNYkVgpGpWX15R',
+    PRIVATE_KEY: process.env.EMAIL_PRIVATE_KEY,
   API_ENDPOINT: 'https://api.emailjs.com/api/v1.0/email/send'
 };
 
@@ -308,6 +309,7 @@ ${note}
             service_id: CONFIG.SERVICE_ID,
             template_id: CONFIG.TEMPLATE_ID,
             user_id: CONFIG.PUBLIC_KEY,
+              accessToken: CONFIG.PRIVATE_KEY,
             template_params: {
                 to_email: TARGET_EMAIL,
                 email: TARGET_EMAIL, // 用於 reply_to
