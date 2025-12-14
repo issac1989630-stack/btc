@@ -716,12 +716,55 @@
                                     </h2>
                                     <span className="text-xs text-slate-400 border border-slate-700 px-2 py-1 rounded-md">來源: {dataSourceInfo}</span>
                                 </div>
-                                <InputSlider label="MVRV Z-Score" description="優先使用鏈上數據，若受限則使用 200WMA 代理。" value={inputs.mvrv} min={-1} max={7} step={0.1} unit="" weight={30} onChange={(v) => setInputs(p => ({...p, mvrv: v}))} />
-                                <InputSlider label="AHR999 Index" description="基於價格、200天幾何平均與幣齡指數運算。" value={inputs.ahr999} min={0.45} max={10} step={0.05} unit="" weight={20} onChange={(v) => setInputs(p => ({...p, ahr999: v}))} />
-                                <InputSlider label="2-Year MA Multiplier" description="0% = MA2; 100% = MA2 x 5。" value={inputs.maMultiplier} min={0} max={100} step={1} unit="%" weight={20} onChange={(v) => setInputs(p => ({...p, maMultiplier: v}))} />
-                                <InputSlider label="USDT Dominance" description="USDT 市占率 (反向指標)。" value={inputs.usdtDom} min={2} max={8} step={0.1} unit="%" weight={15} onChange={(v) => setInputs(p => ({...p, usdtDom: v}))} inverse={true} />
-                                <InputSlider label="Funding Rate" description="永續合約資金費率。" value={inputs.funding} min={-0.02} max={0.12} step={0.001} unit="%" weight={10} onChange={(v) => setInputs(p => ({...p, funding: v}))} />
-                                <InputSlider label="Weekly RSI" description="14 週 RSI。" value={inputs.rsi} min={30} max={90} step={1} unit="" weight={5} onChange={(v) => setInputs(p => ({...p, rsi: v}))} />
+                                <InputSlider 
+                                    label="MVRV Z-Score" 
+                                    description="優先使用鏈上數據，若受限則使用 200WMA 代理。" 
+                                    value={inputs.mvrv} 
+                                    min={-1} max={7} step={0.1} unit="" weight={30} 
+                                    onChange={(v) => setInputs(p => ({...p, mvrv: v}))} 
+                                    detailedInfo="MVRV Z-Score 衡量比特幣市值與實現價值的偏離度。數值低於 0 (綠區) 代表市場低估，是歷史性的買入機會；數值高於 7 (紅區) 代表市場極度狂熱，通常是週期頂部。"
+                                />
+                                <InputSlider 
+                                    label="AHR999 Index" 
+                                    description="基於價格、200天幾何平均與幣齡指數運算。" 
+                                    value={inputs.ahr999} 
+                                    min={0.45} max={10} step={0.05} unit="" weight={20} 
+                                    onChange={(v) => setInputs(p => ({...p, ahr999: v}))}
+                                    detailedInfo="AHR999 指標專為比特幣長線定投設計。當指數 < 0.45 為抄底區間；0.45 - 1.2 為適合定投區間；> 1.2 則不建議操作；> 5 為進入瘋狂牛市。"
+                                />
+                                <InputSlider 
+                                    label="2-Year MA Multiplier" 
+                                    description="0% = MA2; 100% = MA2 x 5。" 
+                                    value={inputs.maMultiplier} 
+                                    min={0} max={100} step={1} unit="%" weight={20} 
+                                    onChange={(v) => setInputs(p => ({...p, maMultiplier: v}))}
+                                    detailedInfo="利用 2 年移動平均線 (綠線) 作為長期支撐。當價格跌破 2 年均線時為買入信號；當價格觸及或突破 2 年均線的 5 倍 (紅線) 時，通常代表週期見頂。"
+                                />
+                                <InputSlider 
+                                    label="USDT Dominance" 
+                                    description="USDT 市占率 (反向指標)。" 
+                                    value={inputs.usdtDom} 
+                                    min={2} max={8} step={0.1} unit="%" weight={15} 
+                                    onChange={(v) => setInputs(p => ({...p, usdtDom: v}))} 
+                                    inverse={true}
+                                    detailedInfo="穩定幣市占率是反向指標。當資金撤回 USDT (市占率上升) 代表市場恐慌，通常對應 BTC 底部；當資金流出 USDT (市占率下降) 代表市場貪婪，通常對應 BTC 頂部。"
+                                />
+                                <InputSlider 
+                                    label="Funding Rate" 
+                                    description="永續合約資金費率。" 
+                                    value={inputs.funding} 
+                                    min={-0.02} max={0.12} step={0.001} unit="%" weight={10} 
+                                    onChange={(v) => setInputs(p => ({...p, funding: v}))}
+                                    detailedInfo="永續合約資金費率反映槓桿情緒。費率極高 (>0.1%) 代表多頭過度擁擠，可能發生多殺多；費率為負值代表空頭強勢，可能發生軋空反彈。"
+                                />
+                                <InputSlider 
+                                    label="Weekly RSI" 
+                                    description="14 週 RSI。" 
+                                    value={inputs.rsi} 
+                                    min={30} max={90} step={1} unit="" weight={5} 
+                                    onChange={(v) => setInputs(p => ({...p, rsi: v}))}
+                                    detailedInfo="週線級別的相對強弱指標。RSI > 70 進入超買區，風險較高；RSI < 30 進入超賣區，通常伴隨價格反彈或底部形成。"
+                                />
                             </div>
                         </div>
                         <div className="lg:col-span-5 space-y-6">
