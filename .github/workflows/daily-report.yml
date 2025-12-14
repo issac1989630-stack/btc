@@ -1,0 +1,32 @@
+name: Bitcoin Monitor Cron
+
+on:
+  # 1. 排程設定 (UTC 時間)
+  # 00:00 UTC = 08:00 AM (台灣/香港/北京時間)
+  schedule:
+    - cron: '0 0 * * *'
+
+  # 2. 允許手動觸發 (方便測試)
+  workflow_dispatch:
+
+jobs:
+  run-daily-report:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 步驟 1: 下載程式碼
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 步驟 2: 設定 Node.js 環境 (版本 20 支援 fetch)
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # 步驟 3: 執行報告並注入 A Secret
+      - name: Run Report Script
+        env:
+          # 重要: 將 GitHub Secret 注入到程式執行時的環境變數
+          EMAIL_USER_EMAIL: ${{ secrets.EMAIL_USER_EMAIL }}
+        run: node cron-job.js
