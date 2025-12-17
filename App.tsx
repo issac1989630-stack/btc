@@ -86,14 +86,15 @@ const App: React.FC = () => {
   const fetchFundingRate = async (): Promise<{value: number, source: string}> => {
     try {
       const res = await fetch('https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT', { 
-        signal: AbortSignal.timeout(3000) 
+credentials: 'omit',
+              signal: AbortSignal.timeout(3000) 
       });
       if (!res.ok) throw new Error("Binance Blocked");
       const data = await res.json();
       return { value: parseFloat(data.lastFundingRate) * 100, source: 'Binance' };
     } catch (e) {
       try {
-        const res = await fetch('https://api.bybit.com/v5/market/tickers?category=linear&symbol=BTCUSDT');
+        const res = await fetch('https://api.bybit.com/v5/market/tickers?category=linear&symbol=BTCUSDT', { credentials: 'omit' });
         const data = await res.json();
         return { value: parseFloat(data.result.list[0].fundingRate) * 100, source: 'Bybit' };
       } catch (err) {
@@ -105,8 +106,11 @@ const App: React.FC = () => {
   const fetchMVRVZScore = async (prices: number[]): Promise<{value: number, source: string}> => {
     try {
       const res = await fetch('https://api.blockchain.info/charts/mvrv-z-score?timespan=5weeks&rollingAverage=8hours&format=json', { 
-        headers: { 'Accept': 'application/json' },
+{
+      credentials: 'omit',
+              headers: { 'Accept': 'application/json' },
         signal: AbortSignal.timeout(3000)
+    }
       });
       if (!res.ok) throw new Error("Blockchain.info Blocked");
       const data = await res.json();
@@ -126,7 +130,7 @@ const App: React.FC = () => {
 
   const fetchUSDTDom = async (): Promise<{value: number, source: string}> => {
     try {
-      const res = await fetch('https://api.coingecko.com/api/v3/global');
+      const res = await fetch('https://api.coingecko.com/api/v3/global', { credentials: 'omit' });
       if (!res.ok) throw new Error("CG Global Failed");
       const data = await res.json();
       const val = data.data.market_cap_percentage.usdt;
@@ -138,7 +142,7 @@ const App: React.FC = () => {
 
   const updateLivePriceOnly = async () => {
     try {
-        const response = await fetch('https://api.coinbase.com/v2/prices/BTC-USD/spot');
+        const response = await fetch('https://api.coinbase.com/v2/prices/BTC-USD/spot', { credentials: 'omit' });
         if (!response.ok) return;
         const json = await response.json();
         const newPrice = parseFloat(json.data.amount);
@@ -172,7 +176,7 @@ const App: React.FC = () => {
 
   const fetchFallbackData = async () => {
       try {
-        const fngResponse = await fetch('https://api.alternative.me/fng/');
+        const fngResponse = await fetch('https://api.alternative.me/fng/', { credentials: 'omit' });
         let fngValue = 50; 
         if (fngResponse.ok) {
             const fngJson = await fngResponse.json();
@@ -209,7 +213,7 @@ const App: React.FC = () => {
     setDataSourceInfo("正在從 API 獲取數據...");
 
     try {
-      const historyRes = await fetch('https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=max&interval=daily');
+      const historyRes = await fetch('https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=max&interval=daily', { credentials: 'omit' });
       if (!historyRes.ok) throw new Error("CoinGecko History API Failed");
       
       const historyData = await historyRes.json();
